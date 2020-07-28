@@ -75,6 +75,7 @@ public class PassportController {
         }
 
         Users users = userService.createUser(userBO);
+       
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);//true 是否加密
         return IMOOCJSONResult.ok(users);
     }
@@ -107,10 +108,22 @@ public class PassportController {
         users.setPassword(null);
         users.setRealname(null);
 
+
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);//true 是否加密
         return IMOOCJSONResult.ok(users);
 
     }
 
+
+    @ApiOperation(value = "用户退出登录", notes = "用户退出登录=>说明", httpMethod = "POST")
+    @PostMapping("/logout")
+    public IMOOCJSONResult logout(@RequestParam String userId, HttpServletRequest request, HttpServletResponse response){
+
+
+        //清除cookie
+        CookieUtils.deleteCookie(request, response, "user");
+
+        return  IMOOCJSONResult.ok();
+    }
 
 }
