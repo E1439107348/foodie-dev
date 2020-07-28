@@ -1,18 +1,30 @@
 package com.imooc.controller;
 
+import com.imooc.pojo.Users;
+import com.imooc.pojo.bo.UserBO;
 import com.imooc.service.UserService;
+import com.imooc.utils.CookieUtils;
 import com.imooc.utils.IMOOCJSONResult;
+import com.imooc.utils.JsonUtils;
+import com.imooc.utils.MD5Utils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@Api(value = "登录注册", tags = {"用于注册登录的相关的接口"})  //类似于title  在swagger页面显示
 @RestController
 @RequestMapping("passport")
 public class PassportController {
     @Autowired
     private UserService userService;
 
+    @ApiOperation(value = "用户名是否存在", notes = "用户名是否存在=>说明", httpMethod = "GET")
     @GetMapping("/usernameIsExist")
     public IMOOCJSONResult usernameIsExist(@RequestParam String username) {
 
@@ -31,12 +43,73 @@ public class PassportController {
         return IMOOCJSONResult.ok();
     }
 
+    @ApiOperation(value = "用户注册", notes = "用户注册=>说明", httpMethod = "POST")
+    @PostMapping("/regist")
+    public IMOOCJSONResult regist(@RequestBody UserBO userBO, HttpServletRequest request, HttpServletResponse response) {
 
-    @GetMapping("/logout")
-    public String logout(@RequestParam String userId) {
+        String username = userBO.getUsername();
+        String password = userBO.getPassword();
+        String confirmPwd = userBO.getConfirmPassword();
+
+        // 0. 判断用户名和密码必须不为空
+        if (StringUtils.isBlank(username) ||
+                StringUtils.isBlank(password) ||
+                StringUtils.isBlank(confirmPwd)) {
+            return IMOOCJSONResult.errorMsg("用户名或密码不能为空");
+        }
+
+        // 1. 查询用户名是否存在
+        boolean isExist = userService.queryUserNameIsExist(username);
+        if (isExist) {
+            return IMOOCJSONResult.errorMsg("用户名已经存在");
+        }
+
+        // 2. 密码长度不能少于6位
+        if (password.length() < 6) {
+            return IMOOCJSONResult.errorMsg("密码长度不能少于6");
+        }
+
+        // 3. 判断两次密码是否一致
+        if (!password.equals(confirmPwd)) {
+            return IMOOCJSONResult.errorMsg("两次密码输入不一致");
+        }
+
+        Users users = userService.createUser(userBO);
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);//true 是否加密
+        return IMOOCJSONResult.ok(users);
+    }
 
 
-        return "succed";
+    @ApiOperation(value = "用户登录", notes = "用户登录=>说明", httpMethod = "POST")
+    @PostMapping("/login")
+    public IMOOCJSONResult login(@RequestBody UserBO userBO,
+                                 HttpServletRequest request, HttpServletResponse response) {
+
+        String username = userBO.getUsername();
+        String password = userBO.getPassword();
+
+        // 0. 判断用户名和密码必须不为空
+        if (StringUtils.isBlank(username) ||
+                StringUtils.isBlank(password)) {
+            return IMOOCJSONResult.errorMsg("用户名或密码不能为空");
+        }
+        //1用户登录
+
+        Users users = null;
+        try {
+            users = userService.queryUserForLogin(username, MD5Utils.getMD5Str(password));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (users == null) {
+            return IMOOCJSONResult.errorMsg("用户名或密码不正确");
+        }
+        users.setPassword(null);
+        users.setRealname(null);
+
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);//true 是否加密
+        return IMOOCJSONResult.ok(users);
+
     }
 
 

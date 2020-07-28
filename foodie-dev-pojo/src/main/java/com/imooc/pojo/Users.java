@@ -1,5 +1,7 @@
 package com.imooc.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.util.Date;
