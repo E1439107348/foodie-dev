@@ -1,16 +1,16 @@
 package com.imooc.enums;
 
 /**
- * 性别枚举
+ *是否枚举
  */
-public enum Sex {
-    woman(0,"女"),man(1,"男"),secret(3,"保密");
+public enum YesOrNo {
+    No(0,"否"),Yes(1,"是");
 
 
     public final Integer type;
     public final String value;
 
-    Sex(Integer type, String value) {
+    YesOrNo(Integer type, String value) {
         this.type = type;
         this.value = value;
     }
