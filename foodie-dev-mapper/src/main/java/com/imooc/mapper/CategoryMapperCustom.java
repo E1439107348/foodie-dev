@@ -12,5 +12,5 @@ public interface CategoryMapperCustom   {
 
       List getSubCatList(Integer rootCatId);
 
-        List<NewItemsVO>   getSixNewItemsLazy(@Param("paramsMap") Map<String, Object> map);
+      List<NewItemsVO>   getSixNewItemsLazy(@Param("paramsMap") Map<String, Object> map);
 }
