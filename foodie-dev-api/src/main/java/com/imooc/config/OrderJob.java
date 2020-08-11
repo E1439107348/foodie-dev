@@ -27,7 +27,7 @@ public class OrderJob {
      */
     @Scheduled(cron = "0/3 * * * * ?")   //https://cron.qqe2.com/  获取时间格式
     public void autoCloseOrder() {
-        orderService.closeOrder();//定时执行方法  ，关闭订单
+//        orderService.closeOrder();//定时执行方法  ，关闭订单
         System.out.println("执行定时任务，当前时间为："
                 + DateUtil.getCurrentDateString(DateUtil.DATETIME_PATTERN));
     }
