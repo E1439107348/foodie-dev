@@ -27,7 +27,7 @@ public class BaseController {
                                                             File.separator + "images" +
                                                             File.separator + "foodie" +
                                                             File.separator + "faces";
-//    public static final String IMAGE_USER_FACE_LOCATION = "/workspaces/images/foodie/faces";
+//    public static final String IMAGE_USER_FACE_LOCATION = "/workspaces/images/foodie/faces";  使用 File.separator 取代/ 考虑到ac linux windows 每个系统/不同缘故
 
 }
 
