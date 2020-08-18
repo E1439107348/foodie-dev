@@ -65,5 +65,14 @@ public interface MyOrdersService {
     public boolean deleteOrder(String userId, String orderId);
 
 
-
+    /**
+     * 获得分页的订单动向
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public PagedGridResult getOrdersTrend(String userId,
+                                          Integer page,
+                                          Integer pageSize);
 }
