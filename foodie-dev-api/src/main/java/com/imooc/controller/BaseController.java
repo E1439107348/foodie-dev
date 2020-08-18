@@ -1,6 +1,7 @@
 package com.imooc.controller;
 
 import com.imooc.pojo.Orders;
+import com.imooc.service.cneter.MyOrdersService;
 import com.imooc.utils.IMOOCJSONResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,9 @@ import java.io.File;
 
 @Controller
 public class BaseController {
+
+    @Autowired
+    public MyOrdersService myOrdersService;
 
     public static final String FOODIE_SHOPCART = "shopcart";
 
@@ -28,6 +32,19 @@ public class BaseController {
                                                             File.separator + "foodie" +
                                                             File.separator + "faces";
 //    public static final String IMAGE_USER_FACE_LOCATION = "/workspaces/images/foodie/faces";  使用 File.separator 取代/ 考虑到ac linux windows 每个系统/不同缘故
+
+
+    /**
+     * 用于验证用户和订单是否有关联关系，避免非法用户调用
+     * @return
+     */
+    public IMOOCJSONResult checkUserOrder(String userId, String orderId) {
+        Orders order = myOrdersService.queryMyOrder(userId, orderId);
+        if (order == null) {
+            return IMOOCJSONResult.errorMsg("订单不存在！");
+        }
+        return IMOOCJSONResult.ok(order);
+    }
 
 }
 
