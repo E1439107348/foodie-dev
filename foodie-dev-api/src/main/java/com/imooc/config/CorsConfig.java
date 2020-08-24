@@ -16,6 +16,11 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         //1.1添加允许跨域的内容
         configuration.addAllowedOrigin("http://localhost:8080");
+        configuration.addAllowedOrigin("http://localhost:8088");
+        configuration.addAllowedOrigin("http://172.16.0.11:8080");
+        configuration.addAllowedOrigin("http://172.16.0.11:8088");
+        configuration.addAllowedOrigin("http://1111.230.182.125:8080");
+        configuration.addAllowedOrigin("http://111.230.182.125:8088");
         //1.2设置是否发送cookie信息=》前端也会有=》（ form提交 		axios.defaults.withCredentials = true;）
         configuration.setAllowCredentials(true);
         //1.3设置语序请求方式
