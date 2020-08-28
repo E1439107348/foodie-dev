@@ -139,20 +139,22 @@
         </dependency>
 
         <!--引入日志依赖 抽象层 与 实现层-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>2.0.0-alpha1</version>
-        </dependency>
+        <!-- <dependency>
+             <groupId>org.slf4j</groupId>
+             <artifactId>slf4j-api</artifactId>
+             <version>1.7.30</version>
+         </dependency>
+         <dependency>
+             <groupId>org.slf4j</groupId>
+             <artifactId>slf4j-log4j12</artifactId>
+             <version>2.0.0-alpha1</version>
+         </dependency>-->
     </dependencies>
 
+
+<!--    打包方式-->
     <build>
-        <plugins>
+        <!--<plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -168,7 +170,45 @@
                     </execution>
                 </executions>
             </plugin>
+        </plugins>-->
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer
+                                        implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
+                                    <resource>META-INF/spring.factories</resource>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${start.class}</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
     </build>
 
 
