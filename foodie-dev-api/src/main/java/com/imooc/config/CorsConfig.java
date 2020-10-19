@@ -23,6 +23,8 @@ public class CorsConfig {
         //发布到服务器
         configuration.addAllowedOrigin("http://111.230.182.125:8080");
         configuration.addAllowedOrigin("http://111.230.182.125:8088");
+        configuration.addAllowedOrigin("http://111.230.182.125:90");
+        configuration.addAllowedOrigin("http://111.230.182.125:9001");
 
 //        configuration.addAllowedOrigin("http://192.168.1.104:8088");
 //        configuration.addAllowedOrigin("http://192.168.1.104:8080");

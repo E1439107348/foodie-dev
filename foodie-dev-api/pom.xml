@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <!--<packaging>jar</packaging>-->
-    <!-- 打包war [1] -->
+    <!-- 打包jar [1] -->
     <packaging>jar</packaging>
     <artifactId>foodie-dev-api</artifactId>
     <dependencies>
