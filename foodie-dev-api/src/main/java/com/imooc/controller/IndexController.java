@@ -8,9 +8,13 @@ import com.imooc.pojo.vo.NewItemsVO;
 import com.imooc.service.CarouselService;
 import com.imooc.service.CategoryService;
 import com.imooc.utils.IMOOCJSONResult;
+import com.imooc.utils.JsonUtils;
+import com.imooc.utils.RedisOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Arg;
 import org.aspectj.asm.IModelFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "首页", tags = {"首页展示相关接口"})  //类似于title  在swagger页面显示
@@ -28,15 +33,28 @@ public class IndexController {
     private CarouselService carouselService;
     @Autowired
     private CategoryService categoryService;
-
+    @Autowired
+    private RedisOperator redisOperator;
 
 
     @ApiOperation(value = "获取首页轮播图列表", notes = "获取首页轮播图列表", httpMethod = "GET")
     @GetMapping("/carousel")
     public IMOOCJSONResult carousel() {
-        List<Carousel> list = carouselService.queryAll(YesOrNo.Yes.type);
+//        List<Carousel> list = carouselService.queryAll(YesOrNo.Yes.type);
+
+        //关于redis修改
+        //  1每次修改数据就删除redis；2定时删除redis(设置过期时间) ；3设置定时重置
+        List<Carousel> list = new ArrayList<>();
+        String carousel = redisOperator.get("carousel");
+        if (StringUtils.isNotBlank(carousel)) {
+            list = JsonUtils.jsonToList(carousel, Carousel.class);
+        } else {
+            list = carouselService.queryAll(YesOrNo.Yes.type);
+            redisOperator.set("carousel", JsonUtils.objectToJson(list));
+        }
         return IMOOCJSONResult.ok(list);
     }
+
     /**
      * 首页分类展示需求：
      * 1. 第一次刷新主页查询大分类，渲染展示到首页
@@ -68,15 +86,14 @@ public class IndexController {
 
 
     /**
-     *
      * @return
      */
     @ApiOperation(value = "获取商品子分类", notes = "获取商品子分类", httpMethod = "GET")
     @GetMapping("/sixNewItems/{rootCatId}")
     public IMOOCJSONResult sixNewItemst(
-            @ApiParam(name="rootCatId",value = "一级分类id",required = true)
-            @PathVariable Integer rootCatId ){
-        if(rootCatId==null){
+            @ApiParam(name = "rootCatId", value = "一级分类id", required = true)
+            @PathVariable Integer rootCatId) {
+        if (rootCatId == null) {
             return IMOOCJSONResult.errorMsg("分类不存在");
         }
 
