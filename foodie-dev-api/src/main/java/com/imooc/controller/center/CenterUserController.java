@@ -1,7 +1,9 @@
 package com.imooc.controller.center;
 
+import com.imooc.controller.BaseController;
 import com.imooc.pojo.Users;
 import com.imooc.pojo.bo.center.CenterUserBO;
+import com.imooc.pojo.vo.UsersVO;
 import com.imooc.service.cneter.CenterUserService;
 import com.imooc.utils.CookieUtils;
 import com.imooc.utils.DateUtil;
@@ -33,7 +35,7 @@ import java.util.Map;
 @Api(value = "用户信息接口", tags = {"用户信息相关接口"})
 @RestController
 @RequestMapping("userInfo")
-public class CenterUserController {
+public class CenterUserController  extends BaseController {
     @Autowired
     private CenterUserService centerUserService;
     @Autowired
@@ -115,13 +117,14 @@ public class CenterUserController {
 
         //跟新用户头像到数据库
         Users userResult=centerUserService.updateUserFace(userId,finalUserFaceUrl);
-
-        userResult=setNullProperty(userResult);
+        // 增加令牌token，会整合进redis，分布式会话
+        UsersVO usersVO = conventUsersVO(userResult);
+//        userResult=setNullProperty(userResult);
 
         CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(userResult), true);
+                JsonUtils.objectToJson(usersVO), true);
 
-        // TODO 后续要改，增加令牌token，会整合进redis，分布式会话
+
         return IMOOCJSONResult.ok();
     }
 
@@ -145,12 +148,12 @@ public class CenterUserController {
         }
 
         Users userResult = centerUserService.updateUserInfo(userId, centerUserBO);
-
-        userResult = setNullProperty(userResult);
+        //增加令牌token，会整合进redis，分布式会话
+        UsersVO usersVO = conventUsersVO(userResult);
+//        userResult = setNullProperty(userResult);
         CookieUtils.setCookie(request, response, "user",
-                JsonUtils.objectToJson(userResult), true);
+                JsonUtils.objectToJson(usersVO), true);
 
-        // TODO 后续要改，增加令牌token，会整合进redis，分布式会话
 
         return IMOOCJSONResult.ok();
     }

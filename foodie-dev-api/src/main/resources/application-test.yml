@@ -31,11 +31,29 @@ spring:
       pool-name: DateSourceHikariCP     # 连接池名字
       max-lifetime: 1800000           # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟 1800000ms
       connection-test-query: SELECT 1 #连接时候测试sql语句
+  servlet:
+    multipart:
+      max-file-size: 512000 #文件上传大小限制500kb
+      max-request-size: 512000 #请求大小限制500kb
+#配置 spring sesion  注意要在Application添加这个=》@EnableRedisHttpSession  // 开启使用redis作为spring session
+  session:
+    store-type: redis
+
   redis:
+#   redis 单机模式
     database: 1
-    host: 111.230.182.125
+    host: 111.230.182.125 #linux服务器
     port: 6379
     password: Ee123
+#    redis 哨兵模式
+#    database: 1
+#    sentinel:
+#      master: master
+#      nodes:  192.168.6.1:26379,127.0.0.1:26479,127.0.0.1:26579
+#    redis 哨兵模式
+#    sentinel:
+#      master: master
+#      nodes:  192.168.6.1:6374,127.0.0.1:6375,127.0.0.1:6376,127.0.0.1:6377,127.0.0.1:6378,127.0.0.1:6378
 ############################################################
 #
 # mybatis 配置
