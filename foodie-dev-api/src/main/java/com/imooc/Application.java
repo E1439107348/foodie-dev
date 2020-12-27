@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
 
 //启动类
-//@SpringBootApplication
+//@SpringBootApplication SecurityAutoConfiguration是Spring Boot提供的安全自动配置类。如果不配置，则在使用过程中始终弹出一个需要登录的页面
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 //扫描mybatis 通用mapper所在的包
 @MapperScan(basePackages = "com.imooc.mapper")

@@ -36,6 +36,10 @@ spring:
     host: 111.230.182.125
     port: 6379
     password: Ee123
+  servlet:
+    multipart:
+      max-file-size: 512000 #文件上传大小限制500kb
+      max-request-size: 512000 #请求大小限制500kb
 ############################################################
 #
 # mybatis 配置
