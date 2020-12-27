@@ -42,7 +42,8 @@ spring:
   redis:
 #   redis 单机模式
     database: 1
-    host: 111.230.182.125 #linux服务器
+#    host: 111.230.182.125 #linux服务器
+    host: 127.0.0.1 #本地
     port: 6379
     password: Ee123
 #    redis 哨兵模式

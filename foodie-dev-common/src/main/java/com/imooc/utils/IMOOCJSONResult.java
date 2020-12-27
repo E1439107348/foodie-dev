@@ -63,6 +63,9 @@ public class IMOOCJSONResult {
     public static IMOOCJSONResult errorMap(Object data) {
         return new IMOOCJSONResult(501, "error", data);
     }
+    public static IMOOCJSONResult errorUserTicket(String msg) {
+        return new IMOOCJSONResult(557, msg, null);
+    }
 
     public static IMOOCJSONResult errorTokenMsg(String msg) {
         return new IMOOCJSONResult(502, msg, null);
